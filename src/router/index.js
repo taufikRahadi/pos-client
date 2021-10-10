@@ -66,16 +66,15 @@ const router = new Router({
   routes: configRoutes()
 })
 
-const isrequiresAuthenticated = localStorage.getItem('accesstoken')
+const isRequiresAuthenticated = localStorage.getItem('accesstoken')
 
-// router.beforeEach((to, from, next) => {
-  // if (to.name === 'auth' || to.name === 'Login' && Boolean(isrequiresAuthenticated)) {
-  //   return next({ name: 'Home' })
-  // } else if (to.meta.requiresAuth) {
-  //   if (Boolean(isrequiresAuthenticated)) return next()
-  //   else return next({ name: 'auth' })
-  // } else next()
-// })
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth) {
+    isRequiresAuthenticated ? next() : next({ name: 'Login' })
+  } else if (to.name === 'Login' && isRequiresAuthenticated) {
+    next({ name: 'Home' })
+  } else next()
+})
 
 function configRoutes () {
   return [
